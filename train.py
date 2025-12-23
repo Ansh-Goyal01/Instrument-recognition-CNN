@@ -11,7 +11,7 @@ from model import InstrumentCNN
 
 # ---------------- CONFIG ----------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-SPEC_DIR = os.path.join(BASE_DIR, "..", "spectrograms")
+SPEC_DIR = os.path.join(BASE_DIR, "spectrograms")
 MODEL_PATH = os.path.join(BASE_DIR, "..", "models", "instrument_cnn.pth")
 PLOT_DIR = os.path.join(BASE_DIR, "..", "plots")
 
