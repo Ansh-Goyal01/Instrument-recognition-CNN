@@ -11,20 +11,28 @@ from model import InstrumentCNN
 
 # ---------------- CONFIG ----------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-SPEC_DIR = os.path.join(BASE_DIR, "spectrograms")
-MODEL_PATH = os.path.join(BASE_DIR, "..", "models", "instrument_cnn.pth")
-PLOT_DIR = os.path.join(BASE_DIR, "..", "plots")
 
+DATA_DIR = os.path.join(BASE_DIR, "data")
+SPEC_DIR = os.path.join(BASE_DIR, "spectrograms")
+MODEL_DIR = os.path.join(BASE_DIR, "models")
+PLOT_DIR = os.path.join(BASE_DIR, "plots")
+
+os.makedirs(MODEL_DIR, exist_ok=True)
 os.makedirs(PLOT_DIR, exist_ok=True)
-os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
+
+MODEL_PATH = os.path.join(MODEL_DIR, "instrument_cnn.pth")
+BEST_MODEL_PATH = os.path.join(MODEL_DIR, "instrument_cnn_best.pth")
 
 CLASSES = sorted(os.listdir(SPEC_DIR))
 NUM_CLASSES = len(CLASSES)
 
 BATCH_SIZE = 32
-EPOCHS = 40
+EPOCHS = 30
 LR = 0.0005
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+
+print("Using device:", DEVICE)
+print("Classes:", CLASSES)
 
 # ---------------- DATASET ----------------
 class SpectrogramDataset(Dataset):
@@ -41,12 +49,14 @@ class SpectrogramDataset(Dataset):
         spec = torch.tensor(spec).unsqueeze(0).float()
 
         if self.train:
-            # ---- SpecAugment ----
-            t = np.random.randint(10, 30)
+            # ---- SpecAugment (moderate) ----
+            # Time masking
+            t = np.random.randint(5, 20)
             t0 = np.random.randint(0, spec.shape[2] - t)
             spec[:, :, t0:t0+t] = 0
 
-            f = np.random.randint(5, 15)
+            # Frequency masking
+            f = np.random.randint(3, 10)
             f0 = np.random.randint(0, spec.shape[1] - f)
             spec[:, f0:f0+f, :] = 0
 
@@ -62,7 +72,11 @@ for idx, inst in enumerate(CLASSES):
         labels.append(idx)
 
 train_p, val_p, train_l, val_l = train_test_split(
-    paths, labels, test_size=0.2, stratify=labels, random_state=42
+    paths,
+    labels,
+    test_size=0.2,
+    stratify=labels,
+    random_state=42
 )
 
 train_ds = SpectrogramDataset(train_p, train_l, train=True)
@@ -85,12 +99,14 @@ criterion = nn.CrossEntropyLoss(weight=class_weights)
 optimizer = torch.optim.Adam(model.parameters(), lr=LR)
 
 scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-    optimizer, mode="max", patience=3, factor=0.5
+    optimizer, mode="max", patience=3, factor=0.5, verbose=True
 )
 
-# ---------------- METRICS STORAGE ----------------
+# ---------------- METRICS ----------------
 train_losses, val_losses = [], []
 train_accs, val_accs = [], []
+
+best_val_acc = 0.0
 
 # ---------------- TRAIN LOOP ----------------
 for epoch in range(EPOCHS):
@@ -147,9 +163,16 @@ for epoch in range(EPOCHS):
         f"Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.4f}"
     )
 
-# ---------------- SAVE MODEL ----------------
+    # ---- SAVE BEST MODEL ----
+    if val_acc > best_val_acc:
+        best_val_acc = val_acc
+        torch.save(model.state_dict(), BEST_MODEL_PATH)
+        print(f"💾 Best model saved! Val Acc = {best_val_acc:.4f}")
+
+# ---------------- SAVE FINAL MODEL ----------------
 torch.save(model.state_dict(), MODEL_PATH)
-print("✅ Model saved")
+print("✅ Final model saved")
+print(f"🏆 Best Validation Accuracy: {best_val_acc:.4f}")
 
 # ---------------- PLOTS ----------------
 epochs = range(1, EPOCHS + 1)
