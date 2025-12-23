@@ -5,8 +5,8 @@ import numpy as np
 print("🔥 preprocess.py STARTED")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(BASE_DIR, "..", "data")
-SAVE_DIR = os.path.join(BASE_DIR, "..", "spectrograms")
+DATA_DIR = os.path.join(BASE_DIR, "data")
+SAVE_DIR = os.path.join(BASE_DIR, "spectrograms")
 
 os.makedirs(SAVE_DIR, exist_ok=True)
 
