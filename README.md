@@ -92,6 +92,6 @@ Transfer learning
 Real-time instrument recognition
 
 👤 Author
-
+#contributor
 Ansh Goyal
 B.Tech ECE | AI/ML enthusiast
