@@ -2,8 +2,10 @@
 
 This project implements an **audio-based musical instrument recognition system** using **Mel spectrograms** and **Convolutional Neural Networks (CNNs)**.
 
-Internship Context
+Internship Context:
+
 This project was developed as part of the Infosys Springboard Internship Program, focusing on practical applications of Deep Learning and Audio Signal Processing.
+
 Raw audio signals are converted into time–frequency representations, enabling deep learning models to identify musical instruments present in an audio clip.
 
 ---
