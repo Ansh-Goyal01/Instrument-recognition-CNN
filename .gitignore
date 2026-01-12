@@ -1,0 +1,15 @@
+# virtual environments
+venv/
+__pycache__/
+
+# datasets and audio
+data/
+spectrograms/
+test_audio/
+
+# trained models
+models/
+*.pth
+
+# python cache
+*.pyc
