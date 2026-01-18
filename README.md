@@ -140,6 +140,7 @@ Confidence scores are normalized across top predictions to improve interpretabil
 🧠 Key Insight
 
 This is not an image classification project.
+<<<<<<< HEAD
 
 Although CNNs are used, the input is audio, not images.
 Spectrograms act as an intermediate time–frequency representation, allowing CNNs to learn discriminative audio features for instrument recognition.
@@ -167,9 +168,26 @@ Use transfer learning on audio-specific models
 Add real-time microphone input
 
 Deploy on cloud platforms (Hugging Face Spaces / Render)
+=======
+It is an audio classification system that leverages spectrograms as an intermediate representation to enable CNN-based feature learning.
+
+📌 Future Improvements
+
+Improve accuracy using deeper CNNs
+
+Data augmentation (time stretching, pitch shifting)
+
+Transfer learning
+
+Real-time instrument recognition
+>>>>>>> a37cb2314198bacf631b5a66d75eede76183b4ff
 
 👤 Author
 
 Ansh Goyal
+<<<<<<< HEAD
 B.Tech Electronics & Communication Engineering
 AI / Machine Learning Enthusiast
+=======
+B.Tech ECE | AI/ML enthusiast
+>>>>>>> a37cb2314198bacf631b5a66d75eede76183b4ff
