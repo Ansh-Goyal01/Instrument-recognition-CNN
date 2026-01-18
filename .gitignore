@@ -1,0 +1,14 @@
+# Virtual environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Datasets and generated files
+data/
+spectrograms/
+
+# OS files
+.DS_Store
+Thumbs.db
